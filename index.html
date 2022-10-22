@@ -1,0 +1,162 @@
+<html>   
+<head>
+<!-- // MEE  vaishali.thakker@bfsminecraft.onmicrosoft.com  : Logago@120328..  -->
+</head>  
+
+<body>
+
+    <canvas style="background-color:pink;height:95%;margin:auto;display:block;" width="600" height="600" id="myCanvas"></canvas>
+
+    <script>
+
+    // Set up the canvas and ctx variables
+        var canvas = document.getElementById("myCanvas");
+        var ctx = canvas.getContext("2d");
+
+    // Create the background image object
+        var backgroundImage = new Image();
+        backgroundImage.src = "water.png"
+
+    // Create the obstacle image object
+        var enemyImage = new Image();
+        enemyImage.src = "enemy.png";
+        enemyImage.width=50;
+        enemyImage.height=50;
+    // Create variables for the obstacle properties
+        var enemyX = 0, enemyY = canvas.height/3;
+
+    // Create the ship image object for the player
+        var dogImage = new Image();
+        dogImage.src = "dog.png";
+
+        dogImage.width=150;
+        dogImage.height=150;
+    // Create variables for the ship's properties
+        var dogX, dogY;
+        function resetdog(){
+            dogX = canvas.width/2;
+            dogY = canvas.height - dogImage.height;
+        }
+        dogImage.onload = resetdog;
+
+    // Create the treasure image object
+        var treasureImage = new Image();
+        treasureImage.src = "food.png"
+treasureImage.width=50;
+treasureImage.height=50;
+    // Create variables for the treasure's properties
+        var treasureX, treasureY = 0, treasureScale = 0.25;
+      function resetTreasure(){
+            // treasureX = Math.random()*(canvas.width-100) + 50;
+            treasureX = Math.random()*550;
+            console.log(treasureX);
+        }
+        resetTreasure();
+
+    // Create the score variable
+        var score = 0;
+
+    // Create addPoint function
+        function addPoint(){
+            score++;   
+        }
+
+    // Create losePoint function
+        function losePoint(){
+            score--;
+        }
+
+        function update(){
+            enemyX=enemyX+4;
+            treasureX=treasureX+5;
+            //obstacleX++;
+            if(treasureX > canvas.width){
+                treasureX = Math.random()*550;
+            }
+            if (enemyX > canvas.width){
+                //obstacleX = 0 - obstacleImage.width;   
+                enemyX = Math.random()*550;
+            }
+
+            // Check for a collision with the obstacle
+            if ( Math.abs(enemyX - dogX) < dogImage.width/2 && Math.abs(enemyY - dogY) < dogImage.height/2 ){
+                // Collision detected
+                resetdog();
+                losePoint();
+                dogImage.src = "saddog.png";
+            }
+
+            // Check if the ship collided with the treasure
+            if (Math.abs(dogX - treasureX) < treasureScale*treasureImage.width/2 && Math.abs(dogY - treasureY) < treasureScale*treasureImage.width/2){
+                resetdog();
+                resetTreasure();
+                addPoint();
+                dogImage.src = "happydog.png";
+            }
+
+        }
+        function draw(){
+            // Draw the background image object
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(enemyImage, enemyX, enemyY,50,50);
+            ctx.drawImage(dogImage, dogX, dogY,150, 150);
+            //ctx.drawImage(treasureImage, treasureX, treasureY, treasureScale * treasureImage.width, treasureScale * treasureImage.height);
+            ctx.drawImage(treasureImage,treasureX,treasureY,50,50);
+
+            // Draw the game score
+            ctx.font = "48px Arial";
+            ctx.textAlign = "left";
+            ctx.fillText("Score: "+score,50,canvas.height-50);
+        }
+
+
+
+
+
+
+
+        // Step 1 - Part 1: Create the "lose" function
+function lose(){
+    ctx.fillStyle = "black";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "red";
+    ctx.fillText("You lose!",canvas.width/2, canvas.height/2);
+}
+function gameLoop(){
+    if (score < 0) {
+        lose();
+    } else {
+        update();
+        draw();
+    }
+}
+       
+        var desiredFrameRate = 30;
+        var delay = 1000/desiredFrameRate;
+        setInterval(gameLoop,delay);
+
+    // Handle keyboard input from the player
+        function keyDownHandler(event){
+            var lastX = dogX, lastY = dogY;           
+
+            if (event.keyCode == 37) {
+                dogX -= 10;
+            } else if (event.keyCode == 38) {
+                dogY -= 10;
+            } else if (event.keyCode == 39) {
+                dogX += 10;
+            } else if (event.keyCode == 40) {
+                dogY += 10;
+            }
+            if (dogX < 0 - dogImage.width/2 || dogX > canvas.width-dogImage.width/2 || dogY < 0 || dogY > canvas.height-dogImage.height/2){
+                dogX = lastX, dogY = lastY;
+            }
+        }
+        document.addEventListener("keydown", keyDownHandler);
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<html>
+    <!-- Step 1 -->
+    <canvas style="background-color:pink;" width="640" height="380" id="myCanvas"></canvas>
+
+    <script>
+        // Step 1
+        canvas = document.getElementById("myCanvas");
+        ctx = canvas.getContext("2d");
+
+        // Step 2 - Part 1
+        var background = new Image();
+background.src = "water.png";
+
+        // Step 2 - Part 2
+        function draw(){
+            // Draw the scene here:
+
+
+            //drawSun();
+            //drawSnowman();
+
+        }
+
+        // Step 2 - Part 3
+      function draw(){
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+        drawSun();
+        drawSnowman();
+}
+
+// Part 3
+background.onload = draw;
+
+        // Step 3
+        function drawCircle(x,y,r){
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,2*Math.PI,true);
+    ctx.fill();
+    ctx.stroke();
+}
+
+        // Step 4
+        function drawSun(){
+    ctx.fillStyle = "yellow";
+    ctx.strokeStyle = "orange";
+    drawCircle(0,0,100);
+}
+
+        //Step 5
+        function drawSnowman(){
+    // Define the snowman's colors
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    // Snowman Base
+    drawCircle(475,250,50);
+    // Snowman Tummy
+    drawCircle(475,175,40);
+    // Snowman Head
+    drawCircle(475,115,30);
+}
+
+    </script>
+
+</html>
